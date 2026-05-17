@@ -7,6 +7,8 @@
  * - 문항별 정답/오답 라벨, 선택지 색상(빨강 오답 / 파랑 정답)
  * - 마지막 세트: 테스트 종료 → 결과 / 그 외: 다음 문제 → 풀이
  */
+import { useEffect } from 'react';
+
 import { ChoiceOption } from '@/components/test/ChoiceOption';
 import { HeaderButton } from '@/components/test/HeaderButton';
 import { MarkdownText } from '@/components/MarkdownText';
@@ -14,6 +16,12 @@ import { TestHeader } from '@/components/test/TestHeader';
 import { TestScreenLayout } from '@/components/test/TestScreenLayout';
 import { useTestContentQuery } from '@/hooks/useTestContentQuery';
 import { getChoiceLetter } from '@/lib/choiceLetter';
+import {
+  formatQuestionSetTitle,
+  formatQuestionTitle,
+  getGlobalQuestionNumber,
+  getQuestionRangeForSet,
+} from '@/lib/questionTitle';
 import { useTestStore } from '@/store/testStore';
 
 export default function TestReviewPage() {
@@ -21,11 +29,22 @@ export default function TestReviewPage() {
   const currentSetIndex = useTestStore((state) => state.currentSetIndex);
   const elapsedSeconds = useTestStore((state) => state.elapsedSeconds);
   const answers = useTestStore((state) => state.answers);
+  const phase = useTestStore((state) => state.phase);
   const setPhase = useTestStore((state) => state.setPhase);
   const setCurrentSetIndex = useTestStore((state) => state.setCurrentSetIndex);
 
-  const questionSet = data?.questionSets[currentSetIndex];
-  const isLastSet = data ? currentSetIndex >= data.questionSets.length - 1 : true;
+  /** 해설 화면 진입 시 phase 동기화 (타이머 정지 유지) */
+  useEffect(() => {
+    if (phase !== 'review') {
+      setPhase('review');
+    }
+  }, [phase, setPhase]);
+
+  const questionSets = data?.questionSets ?? [];
+  const questionSet = questionSets[currentSetIndex];
+  const isLastSet = currentSetIndex >= questionSets.length - 1;
+  const { start: setStart, end: setEnd } = getQuestionRangeForSet(questionSets, currentSetIndex);
+  const setTitle = questionSet ? formatQuestionSetTitle(setStart, setEnd) : '';
 
   const handleNext = () => {
     setCurrentSetIndex(currentSetIndex + 1);
@@ -55,7 +74,7 @@ export default function TestReviewPage() {
         />
       }
     >
-      <h1 className="mb-4 text-lg font-bold text-neutral-900">{questionSet.title}</h1>
+      <h1 className="mb-4 text-lg font-bold text-neutral-900">{setTitle}</h1>
 
       <p className="mb-6 whitespace-pre-wrap text-sm leading-relaxed text-neutral-800">
         {questionSet.passage}
@@ -66,13 +85,15 @@ export default function TestReviewPage() {
       </div>
 
       <div className="flex flex-col gap-10">
-        {questionSet.questions.map((question) => {
+        {questionSet.questions.map((question, questionIndex) => {
           const isQuestionCorrect = answers[question.id] === question.correctChoiceId;
 
           return (
             <section key={question.id} className="flex flex-col gap-3">
               <h2 className="text-base font-bold text-neutral-900">
-                {question.title}{' '}
+                {formatQuestionTitle(
+                  getGlobalQuestionNumber(questionSets, currentSetIndex, questionIndex),
+                )}{' '}
                 <span
                   className={
                     isQuestionCorrect ? 'font-bold text-blue-600' : 'font-bold text-red-600'

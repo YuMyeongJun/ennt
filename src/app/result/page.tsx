@@ -4,13 +4,14 @@
  * 4. 결과 분석 화면
  *
  * - 총 소요 시간, 문제 세트별 정오답 요약
- * - 세트별 소요 시간·문항 정답 수 (perSetElapsedSeconds — 추후 풀이 로직에서 기록)
+ * - 세트별 소요 시간·문항 정답 수 (perSetElapsedSeconds, 정답 확인 시 기록)
  * - 해설 다시 보기 링크 (선택 요구사항)
  */
 import Link from 'next/link';
 
 import { TimerDisplay } from '@/components/TimerDisplay';
 import { useTestContentQuery } from '@/hooks/useTestContentQuery';
+import { formatQuestionSetTitle, getQuestionRangeForSet } from '@/lib/questionTitle';
 import { useTestStore } from '@/store/testStore';
 
 export default function ResultPage() {
@@ -21,6 +22,9 @@ export default function ResultPage() {
   const reset = useTestStore((state) => state.reset);
 
   const questionSets = data?.questionSets ?? [];
+
+  /** 과제 명세: 총 시간 = 세트별 소요 시간 합 */
+  const totalFromSets = perSetElapsedSeconds.reduce((sum, sec) => sum + (sec ?? 0), 0);
 
   /** 세트 내 모든 문항이 맞으면 해당 세트 정답 처리 */
   const correctSetCount = questionSets.filter((set) =>
@@ -42,7 +46,7 @@ export default function ResultPage() {
           <div className="flex justify-between gap-4">
             <dt className="text-neutral-600">총 소요 시간</dt>
             <dd className="font-mono font-medium text-neutral-900">
-              <TimerDisplay seconds={elapsedSeconds} />
+              <TimerDisplay seconds={totalFromSets > 0 ? totalFromSets : elapsedSeconds} />
             </dd>
           </div>
           <div className="flex justify-between gap-4">
@@ -59,13 +63,16 @@ export default function ResultPage() {
               (q) => answers[q.id] === q.correctChoiceId,
             ).length;
             const setTime = perSetElapsedSeconds[index] ?? 0;
+            const { start, end } = getQuestionRangeForSet(questionSets, index);
 
             return (
               <li
                 key={set.id}
                 className="grid grid-cols-[1fr_auto_auto] items-center gap-3 px-3 py-3 text-sm"
               >
-                <span className="font-medium text-neutral-900">{set.title}</span>
+                <span className="font-medium text-neutral-900">
+                  {formatQuestionSetTitle(start, end)}
+                </span>
                 <span className="font-mono text-neutral-600">
                   <TimerDisplay seconds={setTime} />
                 </span>

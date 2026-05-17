@@ -13,11 +13,9 @@ export interface IChoice {
   label: string;
 }
 
-/** 개별 문항 */
+/** 개별 문항 (제목 Question {n}은 UI에서 자동 생성) */
 export interface IQuestion {
   id: string;
-  /** 예: Question 1 */
-  title: string;
   /** 문항 지문 (plain text) */
   passage: string;
   choices: IChoice[];
@@ -30,9 +28,7 @@ export interface IQuestion {
 /** 문제 세트 — 공통 지문 + 복수 문항 */
 export interface IQuestionSet {
   id: string;
-  /** 예: Question 1-3 */
-  title: string;
-  /** 세트 공통 지문 (plain text) */
+  /** 세트 공통 지문 (plain text). 제목 Question {N-M}은 UI에서 자동 생성 */
   passage: string;
   /** 세트 공통 해설 (마크다운) */
   explanation: string;

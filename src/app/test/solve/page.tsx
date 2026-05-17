@@ -7,7 +7,7 @@
  * - 모든 문항 선택 시에만 정답 확인 활성화
  * - 타이머는 useTestTimer로 풀이 중에만 증가
  */
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { ChoiceOption } from '@/components/test/ChoiceOption';
 import { HeaderButton } from '@/components/test/HeaderButton';
@@ -16,6 +16,12 @@ import { TestScreenLayout } from '@/components/test/TestScreenLayout';
 import { useTestContentQuery } from '@/hooks/useTestContentQuery';
 import { useTestTimer } from '@/hooks/useTestTimer';
 import { getChoiceLetter } from '@/lib/choiceLetter';
+import {
+  formatQuestionSetTitle,
+  formatQuestionTitle,
+  getGlobalQuestionNumber,
+  getQuestionRangeForSet,
+} from '@/lib/questionTitle';
 import { useTestStore } from '@/store/testStore';
 
 export default function TestSolvePage() {
@@ -24,9 +30,24 @@ export default function TestSolvePage() {
   const elapsedSeconds = useTestTimer(true);
   const answers = useTestStore((state) => state.answers);
   const setAnswer = useTestStore((state) => state.setAnswer);
+  const phase = useTestStore((state) => state.phase);
   const setPhase = useTestStore((state) => state.setPhase);
+  const startSetTimer = useTestStore((state) => state.startSetTimer);
+  const commitCurrentSetElapsed = useTestStore((state) => state.commitCurrentSetElapsed);
 
-  const questionSet = data?.questionSets[currentSetIndex];
+  const questionSets = data?.questionSets ?? [];
+  const questionSet = questionSets[currentSetIndex];
+  const { start: setStart, end: setEnd } = getQuestionRangeForSet(questionSets, currentSetIndex);
+  const setTitle = questionSet ? formatQuestionSetTitle(setStart, setEnd) : '';
+
+  /** 풀이 화면 진입 시 phase·세트 타이머 기준점 동기화 */
+  useEffect(() => {
+    if (phase !== 'solving') {
+      setPhase('solving');
+    }
+
+    startSetTimer();
+  }, [currentSetIndex, phase, setPhase, startSetTimer]);
 
   const allAnswered = useMemo(() => {
     if (!questionSet) {
@@ -37,6 +58,7 @@ export default function TestSolvePage() {
   }, [answers, questionSet]);
 
   const handleCheck = () => {
+    commitCurrentSetElapsed();
     setPhase('review');
   };
 
@@ -64,16 +86,20 @@ export default function TestSolvePage() {
         />
       }
     >
-      <h1 className="mb-4 text-lg font-bold text-neutral-900">{questionSet.title}</h1>
+      <h1 className="mb-4 text-lg font-bold text-neutral-900">{setTitle}</h1>
 
       <p className="mb-8 whitespace-pre-wrap text-sm leading-relaxed text-neutral-800">
         {questionSet.passage}
       </p>
 
       <div className="flex flex-col gap-10">
-        {questionSet.questions.map((question) => (
+        {questionSet.questions.map((question, questionIndex) => (
           <section key={question.id} className="flex flex-col gap-3">
-            <h2 className="text-base font-bold text-neutral-900">{question.title}</h2>
+            <h2 className="text-base font-bold text-neutral-900">
+              {formatQuestionTitle(
+                getGlobalQuestionNumber(questionSets, currentSetIndex, questionIndex),
+              )}
+            </h2>
             <p className="text-sm text-neutral-800">{question.passage}</p>
             <ul className="mt-1 flex flex-col gap-2">
               {question.choices.map((choice, index) => (
