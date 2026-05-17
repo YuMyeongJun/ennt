@@ -1,10 +1,12 @@
 import cn from 'classnames';
 import Link from 'next/link';
 
+/** 헤더 우측 pill 버튼 (정답 확인 / 다음 문제 / 테스트 종료) */
 export interface IHeaderButtonProps {
   href: string;
   label: string;
   onClick?: () => void;
+  /** 미응답 시 정답 확인 비활성화 */
   disabled?: boolean;
 }
 

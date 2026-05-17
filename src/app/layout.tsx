@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'ennt — English Test',
-  description: 'Objective English reading test service',
+  description: 'Socra AI Frontend 사전과제 — 영어 객관식 테스트',
 };
 
 export default function RootLayout({

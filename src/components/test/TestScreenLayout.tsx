@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+/** 풀이·해설 화면 공통 레이아웃 (고정 헤더 + 스크롤 본문, 모바일 폭 420px) */
 export interface ITestScreenLayoutProps {
   header: ReactNode;
   children: ReactNode;

@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * 1. 초기 화면
+ * - 테스트 시작 버튼 → 문제 세트 풀이 화면
+ * - 진입 시 컨텐츠 prefetch (useTestContentQuery)
+ */
 import Link from 'next/link';
 
 import { useTestContentQuery } from '@/hooks/useTestContentQuery';
@@ -28,4 +33,4 @@ export default function HomePage() {
       </Link>
     </div>
   );
-}
+};

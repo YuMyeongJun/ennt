@@ -1,5 +1,6 @@
 import { formatTime } from '@/lib/formatTime';
 
+/** MM:SS 형식 타이머 표시 */
 export interface ITimerDisplayProps {
   seconds: number;
 }

@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * 2. 문제 세트 풀이 화면
+ *
+ * - 상단: 소요 시간(MM:SS) + 정답 확인 버튼
+ * - 모든 문항 선택 시에만 정답 확인 활성화
+ * - 타이머는 useTestTimer로 풀이 중에만 증가
+ */
 import { useMemo } from 'react';
 
 import { ChoiceOption } from '@/components/test/ChoiceOption';

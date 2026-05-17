@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * 4. 결과 분석 화면
+ *
+ * - 총 소요 시간, 문제 세트별 정오답 요약
+ * - 세트별 소요 시간·문항 정답 수 (perSetElapsedSeconds — 추후 풀이 로직에서 기록)
+ * - 해설 다시 보기 링크 (선택 요구사항)
+ */
 import Link from 'next/link';
 
 import { TimerDisplay } from '@/components/TimerDisplay';
@@ -15,6 +22,7 @@ export default function ResultPage() {
 
   const questionSets = data?.questionSets ?? [];
 
+  /** 세트 내 모든 문항이 맞으면 해당 세트 정답 처리 */
   const correctSetCount = questionSets.filter((set) =>
     set.questions.every((q) => answers[q.id] === q.correctChoiceId),
   ).length;

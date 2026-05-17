@@ -1,5 +1,11 @@
 'use client';
 
+/**
+ * 테스트 컨텐츠 비동기 로드
+ *
+ * - 백엔드 API 호출 패턴으로 `/api/test-content` fetch (선택 요구사항)
+ * - React Query로 캐시·로딩·에러 상태 관리
+ */
 import { useQuery } from '@tanstack/react-query';
 
 import type { ITestContent } from '@/models/ITestContent';

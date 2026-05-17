@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * 3. 문제 세트별 해설 화면
+ *
+ * - 타이머: 풀이 화면과 동일 값 표시, 증가하지 않음 (useTestTimer 미사용)
+ * - 문항별 정답/오답 라벨, 선택지 색상(빨강 오답 / 파랑 정답)
+ * - 마지막 세트: 테스트 종료 → 결과 / 그 외: 다음 문제 → 풀이
+ */
 import { ChoiceOption } from '@/components/test/ChoiceOption';
 import { HeaderButton } from '@/components/test/HeaderButton';
 import { MarkdownText } from '@/components/MarkdownText';

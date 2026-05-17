@@ -1,5 +1,9 @@
 import ReactMarkdown from 'react-markdown';
 
+/**
+ * 해설 텍스트 렌더러
+ * 과제 명세: 개행, bold(**), italic(*) 지원
+ */
 export interface IMarkdownTextProps {
   content: string;
 }
