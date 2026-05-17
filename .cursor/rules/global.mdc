@@ -1,0 +1,64 @@
+---
+description: ennt 공통 코딩 규칙·라이브러리 버전
+alwaysApply: true
+---
+
+# ennt — React / Next.js 코딩 규칙
+
+| 파일 | 내용 |
+|------|------|
+| `ennt-assignment.mdc` | 과제 화면·정책·폴더 구조 |
+| `packages-reference.mdc` | yarn 설치 목록 |
+
+# 환경
+
+- **Node.js**: `>=20.9.0` (`.nvmrc` → 22 권장)
+- **패키지 매니저**: Yarn
+
+# 라이브러리 (2026-05-17)
+
+| 패키지 | 버전 |
+|--------|------|
+| next | 16.2.6 |
+| react / react-dom | 19.2.x |
+| typescript | 5.x |
+| tailwindcss | 4.x |
+| zustand | 5.0.13 |
+| @tanstack/react-query | 5.100.10 |
+| react-markdown | 10.x |
+| classnames | 2.5.1 |
+
+# 코드 스타일
+
+- 함수형 컴포넌트; **클래스 금지**
+- PascalCase 컴포넌트, camelCase 변수·함수, **`I` 접두사** interface
+- **enum 금지**; arrow function; 조건문 **중괄호 필수**
+- ESLint (`eslint-config-next`) + Prettier
+
+# 컴포넌트 선언 순서
+
+1. import → 2. `I[Name]Props` → 3. 컴포넌트 → 4. useState → 5. 변수 → 6. 함수 → 7. useEffect → 8. return
+
+```tsx
+export interface IExampleProps {
+  label: string;
+}
+
+export const Example = ({ label }: IExampleProps) => {
+  const [value, setValue] = useState('');
+
+  const handleClick = () => {};
+
+  useEffect(() => {}, []);
+
+  return <p>{label}</p>;
+};
+```
+
+> Client 컴포넌트에 hooks 사용 시 파일 상단 `'use client'`.
+
+# 상태·데이터
+
+- 전역 테스트 상태: `src/store/testStore.ts` (zustand + persist)
+- 비동기 컨텐츠: `useTestContentQuery` → `/api/test-content`
+- 시간 표시: `src/lib/formatTime.ts` (MM:SS)

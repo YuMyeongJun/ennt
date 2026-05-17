@@ -1,0 +1,53 @@
+---
+description: Socra AI Frontend 과제(ennt) 화면·정책·폴더 구조
+alwaysApply: true
+---
+
+# 프로젝트
+
+- 이름: **ennt**
+- 스택: **Next.js** + TypeScript + Tailwind CSS v4
+
+# 폴더 구조
+
+```
+src/
+├── app/
+│   ├── page.tsx              # 1. 초기 화면
+│   ├── test/solve/page.tsx   # 2. 문제 세트 풀이
+│   ├── test/review/page.tsx  # 3. 문제 세트별 해설
+│   ├── result/page.tsx       # 4. 결과 분석
+│   ├── api/test-content/     # 비동기 컨텐츠 API
+│   ├── providers.tsx
+│   └── layout.tsx
+├── components/
+├── hooks/
+├── models/
+├── store/
+└── lib/
+public/data/test-content.json
+```
+
+# 화면·정책
+
+| # | 화면 | 경로 | 핵심 |
+|---|------|------|------|
+| 1 | 초기 | `/` | 테스트 시작 버튼 |
+| 2 | 풀이 | `/test/solve` | MM:SS 타이머, 선택지, 정답 확인 |
+| 3 | 해설 | `/test/review` | 타이머 정지, 마크다운 해설, 다음/종료 |
+| 4 | 결과 | `/result` | 총 시간, 정오답, 세트별 요약 |
+
+- 테스트: 3~10 문제 세트, 세트당 2~4문제
+- 해설: **react-markdown** (개행, bold, italic)
+- 선택지: 단일 선택, 정답 1개
+
+# 선택 요구사항 (가산점)
+
+- [ ] `useTestContentQuery` + Route Handler 비동기 로드
+- [ ] zustand persist — 중도 이탈 후 상태 복원
+- [ ] 결과 화면에서 해설 재확인 (`/test/review` 링크)
+
+# 제출
+
+- 압축: `fe-ennt-성함.zip` (`node_modules`, `.next/cache` 제외)
+- README에 설치·실행·빌드 방법 필수

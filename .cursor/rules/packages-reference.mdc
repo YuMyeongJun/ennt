@@ -1,0 +1,18 @@
+---
+description: ennt yarn 설치 목록
+alwaysApply: false
+---
+
+```bash
+# dependencies
+yarn add next@16.2.6 react@^19.2.4 react-dom@^19.2.4
+yarn add zustand@^5.0.13 @tanstack/react-query@^5.100.10
+yarn add react-markdown@^10.1.0 classnames@^2.5.1
+
+# devDependencies
+yarn add -D typescript@^5 tailwindcss@^4 @tailwindcss/postcss@^4
+yarn add -D eslint@^9 eslint-config-next@16.2.6 prettier@^3.8.3
+yarn add -D @types/node @types/react @types/react-dom
+```
+
+- Redux, axios, i18next, react-router-dom, yup 등 과제 범위 외 라이브러리 추가 금지
